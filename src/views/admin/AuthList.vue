@@ -1,20 +1,30 @@
 <template>
-    <el-card shadow="never" class="index">
-        <template #header>
-            <div class="card_header">
-                <b>权限列表</b>
-            </div>
-        </template>
-        <el-empty description="暂无数据"></el-empty>
-    </el-card>
+  <el-card shadow="never" class="index">
+    <template #header>
+      <div class="card_header">
+        <b>权限列表</b>
+      </div>
+    </template>
+    <el-empty description="暂无数据"></el-empty>
+  </el-card>
 </template>
 
-<script></script>
+<script>
+import { ref, onMounted } from "vue";
+export default {
+  props: [],
+  setup(props, content) {
+    console.log(props);
+
+    onMounted(() => {});
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 .card_header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>
