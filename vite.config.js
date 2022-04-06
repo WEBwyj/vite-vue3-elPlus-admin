@@ -14,14 +14,17 @@ export default defineConfig({
     },
     server: {
         open: true,
-        cors: true
-        // proxy: {
-        //     "/api": {
-        //         target: "https://www.baidu.com",
-        //         changeOrigin: true,
-        //         rewrite: path => path.replace(/^\/api/, "")
-        //     }
-        // }
+        cors: true,
+        proxy: {
+            "/api": {
+                target: "localhost:3000",
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api': '/'
+                },
+                rewrite: path => path.replace(/^\/api/, "")
+            }
+        }
     },
     /* 打包配置 */
     base: "./",

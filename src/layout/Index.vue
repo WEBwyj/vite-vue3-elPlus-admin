@@ -53,7 +53,7 @@ export default {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #2d2c3c;
     .el-container {
         height: 100vh;
         overflow: hidden;
@@ -64,7 +64,7 @@ export default {
         .app_wrap {
             flex: 1;
             height: auto;
-            background-color: #f3f6f8;
+            background-color: #2d2c3c;
             overflow: hidden;
             overflow-y: auto;
             @include zdy_scrollbar;

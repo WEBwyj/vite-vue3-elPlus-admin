@@ -2,8 +2,8 @@
   <el-row :gutter="10">
     <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
       <el-row :gutter="10">
-        <el-col :span="24">
-          <el-card shadow="always" class="index">
+        <el-col :span="24" style="margin-bottom: 10px">
+          <el-card shadow="always" class="index card_bg">
             <div
               ref="echartRef"
               :style="{ width: '100%', height: '300px' }"
@@ -11,7 +11,7 @@
           </el-card>
         </el-col>
         <el-col :span="24">
-          <el-card shadow="always" class="index">
+          <el-card shadow="always" class="index card_bg">
             <div
               ref="echartRef2"
               :style="{ width: '100%', height: '300px' }"
@@ -21,21 +21,30 @@
       </el-row>
     </el-col>
     <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-      <el-card shadow="always" class="index">
+      <el-card shadow="always" class="index card_bg">
         <div id="clock">
           <p class="date">{{ date }}</p>
           <p class="time">{{ time }}</p>
-          <p class="name">数字时钟</p>
         </div>
       </el-card>
     </el-col>
     <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
       <el-row :gutter="10">
-        <el-col :span="24">
-          <el-card shadow="always" class="index"> 3 </el-card>
+        <el-col :span="24" style="margin-bottom: 10px">
+          <el-card shadow="always" class="index card_bg">
+            <div
+              ref="echartRef3"
+              :style="{ width: '100%', height: '300px' }"
+            ></div>
+          </el-card>
         </el-col>
         <el-col :span="24">
-          <el-card shadow="always" class="index"> 4 </el-card>
+          <el-card shadow="always" class="index card_bg">
+            <div
+              ref="echartRef4"
+              :style="{ width: '100%', height: '300px' }"
+            ></div>
+          </el-card>
         </el-col>
       </el-row>
     </el-col>
@@ -51,6 +60,9 @@ export default {
     let { proxy } = getCurrentInstance();
     let echartRef = ref(null);
     let echartRef2 = ref(null);
+    let echartRef3 = ref(null);
+    let echartRef4 = ref(null);
+
     const clock = reactive({
       date: "",
       time: "",
@@ -58,6 +70,7 @@ export default {
 
     onMounted(() => {
       setInterval(updateTime, 1000);
+      getMockData()
 
       // 柱状图
       let barChart = proxy.$echarts.init(echartRef.value);
@@ -93,6 +106,9 @@ export default {
         },
         legend: {
           data: ["Line 1", "Line 2", "Line 3", "Line 4", "Line 5"],
+          textStyle: {
+            color: "#ffffff",
+          },
         },
         grid: {
           left: "3%",
@@ -256,12 +272,92 @@ export default {
       };
       gradChart.setOption(option2);
 
+      // 饼图
+      let dougChart = proxy.$echarts.init(echartRef3.value);
+      let option3 = {
+        tooltip: {
+          trigger: "item",
+        },
+        legend: {
+          top: "2%",
+          left: "center",
+          textStyle: {
+            color: "#ffffff",
+          },
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          top: "10%",
+          containLabel: true,
+        },
+        series: [
+          {
+            name: "Access From",
+            type: "pie",
+            radius: ["40%", "70%"],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 10,
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+            label: {
+              show: false,
+              position: "center",
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: "20",
+                fontWeight: "bold",
+              },
+            },
+            labelLine: {
+              show: false,
+            },
+            data: [
+              { value: 1048, name: "Search Engine" },
+              { value: 735, name: "Direct" },
+              { value: 580, name: "Email" },
+              { value: 484, name: "Union Ads" },
+              { value: 300, name: "Video Ads" },
+            ],
+          },
+        ],
+      };
+      dougChart.setOption(option3);
+
+      // 折线图
+      let lineChart = proxy.$echarts.init(echartRef4.value);
+      let option4 = {
+        xAxis: {
+          type: "category",
+          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: "line",
+            smooth: true,
+          },
+        ],
+      };
+      lineChart.setOption(option4);
+
       window.addEventListener("resize", function () {
         barChart.resize();
         gradChart.resize();
+        dougChart.resize();
+        lineChart.resize();
       });
     });
 
+    // 数字时钟
     const updateTime = () => {
       let week = [
         "星期日",
@@ -296,9 +392,21 @@ export default {
       return (zero + num).slice(-digit);
     };
 
+    const getMockData = () => {
+        proxy.$axios.get('/api/getData')
+        .then(res => {
+          console.log(res);
+        })
+        .catch(error => {
+          
+        })
+      };
+
     return {
       echartRef,
       echartRef2,
+      echartRef3,
+      echartRef4,
       ...toRefs(clock),
     };
   },
@@ -312,31 +420,33 @@ export default {
   justify-content: space-between;
 }
 
-// 数字时钟
-#clock {
-  font-family: "Share Tech Mono", monospace;
-  color: #ffffff;
-  text-align: center;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  color: #daf6ff;
-  text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
-  .time {
-    letter-spacing: 0.05em;
-    font-size: 80px;
-    padding: 5px 0;
-  }
-  .date {
-    letter-spacing: 0.1em;
-    font-size: 24px;
-  }
-  .name {
-    letter-spacing: 0.1em;
-    font-size: 12px;
-    padding: 20px 0 0;
+.card_bg {
+  background: #393847;
+  // background: -webkit-radial-gradient(center ellipse, #2d2c3c 0%, #393847 70%);
+  // background: radial-gradient(ellipse at center, #2d2c3c 0%, #393847 70%);
+  background-size: 100%;
+  height: 100%;
+  border: none;
+  // 数字时钟
+  #clock {
+    // font-family: "Share Tech Mono", monospace;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    color: #daf6ff;
+    text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
+    .time {
+      letter-spacing: 0.05em;
+      font-size: 80px;
+      padding: 5px 0;
+    }
+    .date {
+      letter-spacing: 0.1em;
+      font-size: 24px;
+    }
   }
 }
 </style>

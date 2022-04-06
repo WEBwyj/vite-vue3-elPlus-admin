@@ -5,6 +5,7 @@ import "element-plus/dist/index.css";
 // 自定义icon组件
 import Icons from "@/components/Icons.vue";
 import * as echarts from "echarts"; // echarts图表
+import "@/mock"
 
 import App from "./App.vue";
 import router from "./router";

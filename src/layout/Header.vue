@@ -73,7 +73,8 @@ export default {
 <style lang="scss" scoped>
 .el-header {
     padding: 0 16px;
-    border-bottom: 1px solid #ddd;
+    // border-bottom: 1px solid #ddd;
+    background-color: #393847;
     display: flex;
     display: -webkit-flex;
     align-items: center;
